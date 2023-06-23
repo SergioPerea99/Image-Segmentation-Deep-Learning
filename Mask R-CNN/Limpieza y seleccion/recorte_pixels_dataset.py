@@ -57,7 +57,6 @@ for nombre_archivo in os.listdir(carpeta_entrada):
 
 
 
-
 #2ª PARTE: Recortar las imágenes según las mismas dimensiones de recorte que las máscaras.
 
 
