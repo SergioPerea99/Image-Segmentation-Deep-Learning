@@ -6,6 +6,7 @@ from mmengine import Config
 from mmengine.runner import set_random_seed
 import numpy as np
 
+'''
 # Cargar la configuración del archivo
 cfg = Config.fromfile(r"C:\TFG\3_MODELOS_DL\mmdetection\configs\ms_rcnn\ms-rcnn_r50-caffe_fpn_2x_coco.py")
 
@@ -84,3 +85,59 @@ output_image_with_bg = np.where(mask_segmented[:, :, np.newaxis], color, backgro
 # Guardar la imagen resultante en una ruta específica
 output_path = r"C:\TFG\GITHUB_MI_TFG\Image-Segmentation-Deep-Learning\Mask R-CNN\Metricas de evaluacion\output_image_reference.png"
 mmcv.imwrite(output_image_with_bg, output_path)
+
+'''
+
+import os
+import mmcv
+from mmdet.apis import init_detector, inference_detector
+import numpy as np
+
+# Rutas de la carpeta con imágenes a segmentar y la carpeta de salida para los resultados
+input_image_folder = r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Images\test"
+output_folder = r"C:\Users\Lenovo\Downloads\resultados_segmentacion"
+
+# Cargar el archivo de punto de control del modelo
+checkpoint_file = r"C:\epoch_200.pth"
+
+# Cargar la configuración del archivo
+cfg = Config.fromfile(r"C:\TFG\3_MODELOS_DL\mmdetection\configs\ms_rcnn\ms-rcnn_r50-caffe_fpn_2x_coco.py")
+
+
+# Modificar el número de clases de detección de cajas y en la de segmentación (si es necesario)
+cfg.model.roi_head.bbox_head.num_classes = 1
+cfg.model.roi_head.mask_head.num_classes = 1
+
+# Crear el directorio de salida si no existe
+os.makedirs(output_folder, exist_ok=True)
+
+# Cargar el modelo una vez (para evitar cargarlo en cada iteración del bucle)
+model = init_detector(cfg, checkpoint_file, device='cpu')
+
+# Recorrer las imágenes en la carpeta de entrada
+for image_name in os.listdir(input_image_folder):
+
+    output_image_path = os.path.join(output_folder, image_name)
+    if os.path.exists(output_image_path):
+        print(f"Imagen ya procesada, omitiendo: {output_image_path}")
+        continue
+    
+    # Cargar la imagen a segmentar
+    img = mmcv.imread(os.path.join(input_image_folder, image_name), channel_order='rgb')
+
+    # Realizar la inferencia en la imagen
+    result = inference_detector(model, img)
+
+    # Acceder a la máscara de segmentación de la predicción
+    mask_pred = result.pred_instances.masks[0].numpy()
+
+    # Crear una imagen segmentada aplicando la máscara a una imagen de fondo negra
+    background = np.zeros_like(img)
+    color = np.array([37, 177, 90])
+    output_image = np.where(mask_pred[:, :, np.newaxis], color, background)
+
+    # Guardar la imagen segmentada en la carpeta de salida
+    output_path = os.path.join(output_folder,image_name)
+    mmcv.imwrite(output_image, output_path)
+
+    print("Imagen segmentada guardada en:", output_path)
