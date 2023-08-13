@@ -21,7 +21,7 @@ from mmengine.runner import Runner
 runner = Runner.from_cfg(cfg)
 
 # Cargar la imagen a segmentar
-img = mmcv.imread(r"C:\TFG\0_BBDD_COMPLETAS\BBDD_completa\Primer enlace\Lynx_pardinus\Babel\Ca.02.003.2011.Babel(29-01)1_2.JPG", channel_order='rgb')
+img = mmcv.imread(r"C:\TFG\GITHUB_MI_TFG\Image-Segmentation-Deep-Learning\Mask R-CNN\Metricas de evaluacion\Ca.02.003.2011.Babel(29-01)1_2_base.JPG", channel_order='rgb')
 
 # Cargar el archivo de punto de control del modelo
 checkpoint_file = r"C:\epoch_200.pth"
@@ -51,9 +51,36 @@ color = np.ones_like(img) * np.array([37, 177, 90])
 
 # Aplicar la máscara para cambiar los valores
 output_image = np.where(mask_pred[:, :, np.newaxis], color, background)
-# Mostrar las dimensiones de la imagen resultante
+
+# Guardar la imagen resultante en una ruta específica
+output_path = r"C:\TFG\GITHUB_MI_TFG\Image-Segmentation-Deep-Learning\Mask R-CNN\Metricas de evaluacion\output_image.png"
+mmcv.imwrite(output_image, output_path)
+
+print("Imagen guardada en:", output_path)
+
+# Dimensiones de la imagen resultante
 print("Dimensiones de la imagen segmentada: ", output_image.shape)
 
 # Mostrar la imagen de salida
 plt.imshow(output_image)
 plt.show()
+
+
+label = mmcv.imread(r"C:\TFG\GITHUB_MI_TFG\Image-Segmentation-Deep-Learning\Mask R-CNN\Metricas de evaluacion\Ca.02.003.2011.Babel(29-01)1_2.JPG", channel_order='rgb')
+
+
+# Crear una matriz con todos los píxeles en negro (fondo)
+background = np.zeros_like(label)
+
+# Crear una matriz con el valor de RGB deseado (37, 177, 90) del mismo tamaño que la imagen original
+color = np.ones_like(label) * np.array([37, 177, 90])
+
+# Crear una máscara booleana para identificar los píxeles segmentados (color igual a (37, 177, 90))
+mask_segmented = np.all(label == color, axis=-1)
+
+# Asignar el color deseado a los píxeles segmentados en la imagen de fondo negra
+output_image_with_bg = np.where(mask_segmented[:, :, np.newaxis], color, background)
+
+# Guardar la imagen resultante en una ruta específica
+output_path = r"C:\TFG\GITHUB_MI_TFG\Image-Segmentation-Deep-Learning\Mask R-CNN\Metricas de evaluacion\output_image_reference.png"
+mmcv.imwrite(output_image_with_bg, output_path)
