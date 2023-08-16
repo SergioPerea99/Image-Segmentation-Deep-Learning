@@ -1,10 +1,9 @@
-
 import cv2
 import numpy as np
 from skimage.metrics import structural_similarity as ssim
 import matplotlib.pyplot as plt
 
-'''
+
 target_color = [37, 177, 90]  # The RGB color for segmentation
 
 # Cargar las imágenes
@@ -30,7 +29,6 @@ ssim_valor = ssim(img_reference_gray, img_segmented_gray)
 print("MAE:", mae)
 print("MSE:", mse)
 print("SSIM:", ssim_valor)
-
 
 
 # 2. MÉTRICA F1-SCORE (ACCURACY Y RECALL POR IGUAL):
@@ -61,7 +59,6 @@ print("F1-SCORE (Object Segmented):", F1_SCORE)
 
 # 3. MÉTRICA DE BOUNDARY F1-SCORE (Cálculo de cuán bien clasifica el contorno del objeto):
 
-'''
 
 def obtener_coordenadas_color_contornos(imagen_grises_resaltada, color_objetivo):
     
@@ -98,7 +95,6 @@ def mostrar_puntos_de_interes(imagen, coordenadas_x, coordenadas_y, color):
     plt.show()
     return imagen_con_puntos
 
-'''
 coordenadas_x, coordenadas_y = obtener_coordenadas_color_contornos(img_reference_gray, target_color)
 img_boundary_reference = mostrar_puntos_de_interes(img_reference,coordenadas_x,coordenadas_y,(37, 177, 90))
 
@@ -148,7 +144,7 @@ iou = np.sum(intersection) / np.sum(union)
 
 print("Jaccard Index (IoU):", iou)
 
-'''
+
 
 
 import cv2
@@ -157,7 +153,7 @@ from skimage.metrics import structural_similarity as ssim
 import os
 
 # Definir la carpeta con las imágenes segmentadas y las imágenes de referencia
-segmented_folder = r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Images\test"
+segmented_folder = r"C:\Users\Lenovo\Downloads\resultados_segmentacion"
 reference_folder = r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Masks\test"
 
 # Definir el color RGB objetivo (37, 177, 90)
