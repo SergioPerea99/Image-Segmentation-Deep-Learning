@@ -25,6 +25,7 @@ for image_name in os.listdir(input_image_folder):
     if os.path.exists(output_image_path):
         print(f"Imagen ya procesada, omitiendo: {output_image_path}")
         continue
+    
     if not image_name.lower().endswith(('.jpg', '.jpeg', '.png')):
         print(f"No es una imagen: {output_image_path}")
         continue

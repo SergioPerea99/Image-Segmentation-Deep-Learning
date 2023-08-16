@@ -95,6 +95,7 @@ def mostrar_puntos_de_interes(imagen, coordenadas_x, coordenadas_y, color):
     plt.show()
     return imagen_con_puntos
 
+
 coordenadas_x, coordenadas_y = obtener_coordenadas_color_contornos(img_reference_gray, target_color)
 img_boundary_reference = mostrar_puntos_de_interes(img_reference,coordenadas_x,coordenadas_y,(37, 177, 90))
 
