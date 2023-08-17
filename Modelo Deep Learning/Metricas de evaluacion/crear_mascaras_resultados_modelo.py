@@ -18,6 +18,7 @@ cfg.model.roi_head.bbox_head.num_classes = 1
 cfg.model.roi_head.mask_head.num_classes = 1
 model = init_detector(cfg, checkpoint_file, device='cpu') # Cargar el modelo una vez 
 
+
 # Ejecución de todas las imágenes
 for image_name in os.listdir(input_image_folder):
 
@@ -25,7 +26,6 @@ for image_name in os.listdir(input_image_folder):
     if os.path.exists(output_image_path):
         print(f"Imagen ya procesada, omitiendo: {output_image_path}")
         continue
-    
     if not image_name.lower().endswith(('.jpg', '.jpeg', '.png')):
         print(f"No es una imagen: {output_image_path}")
         continue
@@ -41,7 +41,7 @@ for image_name in os.listdir(input_image_folder):
 
         # Crear una imagen segmentada aplicando la máscara a una imagen de fondo negra
         background = np.zeros_like(img)
-        color = np.array([37, 177, 90])
+        color = np.array([90,175,37])
         output_image = np.where(mask_pred[:, :, np.newaxis], color, background)
 
         # Guardar la imagen segmentada en la carpeta de salida
@@ -51,5 +51,3 @@ for image_name in os.listdir(input_image_folder):
         print("Imagen segmentada guardada en:", output_path)
     except:
         continue
-
-

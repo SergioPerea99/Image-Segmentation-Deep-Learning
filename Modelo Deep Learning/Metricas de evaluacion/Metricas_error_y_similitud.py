@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from skimage.metrics import structural_similarity as ssim
+import matplotlib.pyplot as plt
 import os
 
 # Inicialización de variables
@@ -21,6 +22,13 @@ for image_name in os.listdir(segmented_folder):
     #Ejecutar el cálculo MAE, MSE y SSIM entre ambas.
     img_reference_gray = cv2.cvtColor(img_reference, cv2.COLOR_BGR2GRAY)
     img_segmented_gray = cv2.cvtColor(img_segmented, cv2.COLOR_BGR2GRAY)
+
+    plt.imshow(img_segmented_gray)
+    plt.show()
+
+    plt.imshow(img_reference_gray)
+    plt.show()
+
     
     mae = np.mean(np.abs(img_reference_gray - img_segmented_gray))
     mse = np.mean((img_reference_gray - img_segmented_gray) ** 2)

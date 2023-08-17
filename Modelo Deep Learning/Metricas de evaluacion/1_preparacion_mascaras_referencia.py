@@ -4,7 +4,7 @@ from PIL import Image
 
 
 
-def preparar_imagenes_originales(ruta_imagen, rango_rgb_inicio=[35, 175, 88],rango_rgb_fin=[39, 179, 92]):
+def preparar_imagenes_originales(ruta_imagen, rango_rgb_inicio=[35, 175, 88],rango_rgb_fin=[39, 179, 92],  rgb_convertido=[37, 177, 90]):
     imagen = Image.open(ruta_imagen)
     imagen_np = np.array(imagen)
 
@@ -15,12 +15,12 @@ def preparar_imagenes_originales(ruta_imagen, rango_rgb_inicio=[35, 175, 88],ran
     # Crea una máscara basada en el rango de valores RGB
     mascara = np.all((imagen_np >= rango_rgb_inicio) & (imagen_np <= rango_rgb_fin), axis=-1)
 
-    # Crea una imagen negra y copia los píxeles correspondientes desde la imagen original
-    imagen_resultante = np.zeros_like(imagen_np)
+    # Crea una imagen con los valores de RGB (37, 177, 90)
+    imagen_resultante = np.zeros_like(imagen_np) 
     imagen_resultante[mascara] = imagen_np[mascara]
 
     # Convierte el arreglo NumPy de vuelta a una imagen PIL
-    imagen_resultante_pil = Image.fromarray(imagen_resultante)
+    imagen_resultante_pil = Image.fromarray(imagen_resultante.astype(np.uint8))
 
     return imagen_resultante_pil
 
@@ -34,4 +34,5 @@ for imagen in os.listdir(carpeta_imagenes):
 
     # Guardar la imagen resultante en la carpeta de resultados
     ruta_imagen_resultante = os.path.join(carpeta_destino, imagen)
+
     imagen_final.save(ruta_imagen_resultante)
