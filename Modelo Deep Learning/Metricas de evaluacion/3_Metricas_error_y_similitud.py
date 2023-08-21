@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import os
 
 # Inicialización de variables
-segmented_folder = r"C:\Users\Lenovo\Downloads\resultados_segmentacion"
+segmented_folder = r"C:\Users\Lenovo\Downloads\resultados_segmentacion\version2_modelo"
 reference_folder = r"C:\mascaras_test_originales"
 mae_values = []
 mse_values = []

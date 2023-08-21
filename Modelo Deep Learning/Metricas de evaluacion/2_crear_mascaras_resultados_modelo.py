@@ -8,12 +8,13 @@ import os
 
 # Rutas necesarias
 input_image_folder = r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Images\test"
-output_folder = r"C:\Users\Lenovo\Downloads\resultados_segmentacion"
+output_folder = r"C:\Users\Lenovo\Downloads\resultados_segmentacion\version2_modelo"
 os.makedirs(output_folder, exist_ok=True)
 
 # Configuración del modelo
-checkpoint_file = r"C:\epoch_200.pth"
-cfg = Config.fromfile(r"C:\TFG\3_MODELOS_DL\mmdetection\configs\ms_rcnn\ms-rcnn_r50-caffe_fpn_2x_coco.py")
+checkpoint_file = r"C:\TFG\modelos_epochs\v2_epoch_200.pth"
+cfg = Config.fromfile(r"C:\TFG\modelos_epochs\version2_modelo_configuracion.py")
+#cfg = Config.fromfile(r"C:\TFG\3_MODELOS_DL\mmdetection\configs\ms_rcnn\ms-rcnn_r50-caffe_fpn_2x_coco.py")
 cfg.model.roi_head.bbox_head.num_classes = 1
 cfg.model.roi_head.mask_head.num_classes = 1
 model = init_detector(cfg, checkpoint_file, device='cpu') # Cargar el modelo una vez 
