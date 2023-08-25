@@ -1,14 +1,6 @@
-# Imports
 import csv
 import os
 import cv2 as cv
-from PIL import Image
-
-# Configuración
-RUTA = 'C:\TFG\Preprocesamiento\BBDD_completa\Primer enlace'
-NOMBRE_CSV = "CSV1.csv"
-RUTA_COPIAR_ANIMALES = ".\\BBDDPost\\prueba\\"
-dimensiones = {} #Para saber las diferentes dimensiones existentes dentro del dataset
 
 
 # Obtención de un diccionario {nombreArchivo : especie,animal} a partir del fichero CSV
@@ -59,7 +51,11 @@ def procesar_imagenes(ruta_origen, ruta_destino):
 
 
 # Ejecución
-def main():
+if __name__ == "__main__":
+    RUTA = r"C:\TFG\0_BBDD_COMPLETAS\BBDD_completa\Primer enlace"
+    NOMBRE_CSV = "CSV1.csv"
+    RUTA_COPIAR_ANIMALES = r"C:\TFG\1_PREPROCESAMIENTO\BBDD_1_PREPROC"
+    dimensiones = {} 
     diccionario = crear_diccionario(NOMBRE_CSV)
     print(f"Líneas leídas: {len(diccionario)}")
     procesar_imagenes(RUTA, RUTA_COPIAR_ANIMALES)
@@ -67,9 +63,3 @@ def main():
     for dimension, count in dimensiones.items():
         print(f"Dimensión: {dimension}, contador: {count}")
 
-
-
-
-
-## HILO PRINCIPAL
-main()

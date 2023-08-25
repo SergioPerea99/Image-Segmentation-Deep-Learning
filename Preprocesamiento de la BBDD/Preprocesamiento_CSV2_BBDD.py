@@ -1,157 +1,86 @@
 import os
-import os.path
 import cv2 as cv
 from PIL import Image
 
-# Variables globales
-ruta = 'C:\TFG\BBDD_1_2\BBDD_completa\Segundo enlace'
-listaCarpetas = ['\L1','\L2','\L3','\L4','\L5','\L6','\L7','\L8','\L9',r'\N1',r'\N2',r'\N3',r'\N4',r'\N5',r'\N6',r'\N7',r'\N8',r'\N9']
 
-nombreCSV = "CSV2.csv"
-separador = ";"
+def leer_csv(nombre_csv):
+    diccionario = {}
+    nombres_registros_dicc = []
+    especies = set()
+    with open(nombre_csv, encoding="utf8") as csv_file:
+        lines = csv_file.readlines()
+        header = lines[0].strip().split(';')
+        indice_especie = header.index(especie_columna)
+        indice_nombre_img = header.index(nombre_img_columna)
+        for line in lines[1:]:
+            data = line.strip().split(';')
+            key = data[indice_nombre_img]
+            value = data[indice_especie]
+            diccionario[key] = value
+            nombres_registros_dicc.append(key)
+            especies.add(value)
+    return diccionario
 
-especie = "Species"
-nombreIMG = "FileName"
+def procesar_imagenes(diccionario, ruta, ruta_copiar_animales, lista_no_animales):
+    no_aparecen_total = 0
+    no_aparecen = 0
+    descarte = 0
+    animals = 0
+    imagenes_encontradas_total = 0
 
-rutaCopiarAnimales = "C:\TFG\CODIGOS\CODIGOS_VC\BBDD_2_PREPROC\\"
+    for root, dirs, files in os.walk(ruta, topdown=False):
+        for name in files:
+            imagenes_encontradas_total += 1
+            lista_imagenes.append(name)
 
-# Obtenemos un diccionario {nombreArchivo : especie} a partir del fichero CSV
+            if diccionario.get(name):
+                valor = diccionario.get(name)
 
-# Parámetros
-diccionario = {}
+                if valor not in lista_no_animales:
+                    ruta_img = os.path.join(root, name)
+                    img = cv.imread(ruta_img)
+                    im_with_exif = Image.open(ruta_img)
+                    pil_img = Image.fromarray(img)
+                    animals += 1
 
-CSV = open(nombreCSV, encoding="utf8") 
-reader = CSV.readlines()
-primeraLinea = True
+                    ruta_copia = os.path.join(ruta_copiar_animales, name)
+                    if 'exif' in im_with_exif.info:
+                        exif = im_with_exif.info['exif']
+                        pil_img.save(ruta_copia, format='JPEG', exif=exif)
+                    else:
+                        pil_img.save(ruta_copia, format='JPEG')
 
-indiceEspecie = -1
-indiceNombreIMG = -1
+                else:
+                    descarte += 1
 
-numLineas = 0
-
-nombresRegistrosDicc = []
-
-especies = set()
-
-
-# Leemos el archivo CSV linea a linea
-for linea in reader:
-
-    # Eliminar salto de linea
-    linea = linea.rstrip()
-
-    # Para la primera línea, guardamos los índices de cada columna que nos interesa
-    if primeraLinea:
-        nombres = linea.split(';')
-        indiceEspecie = nombres.index(especie)
-        indiceNombreIMG = nombres.index(nombreIMG)
-        primeraLinea = False
-
-    # Para el resto de líneas guardamos los datos
-    else:
-        numLineas += 1
-        datosFoto = linea.split(';')
-
-        key = datosFoto[indiceNombreIMG]
-        value = [datosFoto[indiceEspecie]]
-
-        # Añadir elementos al diccionario
-        diccionario[key] = value[0]
-
-        nombresRegistrosDicc.append(key)
-        especies.add(value[0])
-
-        
-
-# Mostramos los resultados
-print("Lineas leidas: " + str(numLineas))
-print("Longitud del diccionario: " + str(len(diccionario)))
-
-print(diccionario)
-
-
-
-#Como no nos interesan "especies" como NOID, vehicle, etc... vamos a no contarlas:
-listaNoAnimales = ["human", "NOID", "vehicle","NA", "","empty"]  # Identificadores que aparecen en el archivo CSV
-
-
-# Obtener más estadísticas
-# Separar imágenes con animales de imágenes vacías
-
-
-# Variables
-noAparecenTotal = 0
-noAparecen = 0
-descarte = 0
-total = 0
-animals = 0
-imagenesEncontradas = 0
-imagenesEncontradasTotal = 0
-listaImagenes = []
-
-
-# Recorremos el directorio de imágenes
-for root, dirs, files in os.walk(ruta, topdown=False):
-   for name in files:
-
-
-      imagenesEncontradas += 1
-      imagenesEncontradasTotal += 1
-      listaImagenes.append(name)
-      
-      # Si están en el diccionario significa que aparecen en el fichero CSV
-      if diccionario.get(name):
-
-         valor = diccionario.get(name)
-
-         #print(valor)
-
-         # Comprobamos si no están en la lista de descartes y aparezcan animales (suponiendo que si aparece un vehículo y/o persona no aparece un animal)
-         if not (valor in listaNoAnimales):
-            #print("Entra: "+valor)
-            rutaIMG = os.path.join(root, name)
-            
-            # Abrimos con OpenCV para hacer la transformación
-            img = cv.imread(rutaIMG)
-
-            # Abrimos con Image para mantener los metadatos
-            imWithEXIF = Image.open(rutaIMG)
-
-            # Abrimos la imagen transformada con PIL
-            pil1 = Image.fromarray(img)
-
-            animals += 1
-
-            # Copiar a Animales
-            if 'exif' in imWithEXIF.info:
-               exif = imWithEXIF.info['exif']
-               pil1.save(rutaCopiarAnimales + name, format='JPEG', exif=exif)
             else:
-               pil1.save(rutaCopiarAnimales + name, format='JPEG', exif=exif)
+                no_aparecen += 1
+                no_aparecen_total += 1
 
-         # Si están en la lista de descartes, no guardamos la nueva imagen
-         else:
-            descarte += 1
+        # Mostrar estadísticas por directorio
+        print("\n")
+        print(os.path.basename(root))
+        print("Número de imágenes encontradas:", len(files))
+        print("Número de imágenes que no aparecen en el archivo CSV:", no_aparecen)
+        print("Número de imágenes que contienen animales:", animals)
+
+        # Reiniciar variables
+        animals = 0
+
+    # Mostrar estadísticas globales
+    print("Número total de imágenes:", imagenes_encontradas_total)
+    print("Número de imágenes descartadas:", descarte)
 
 
-      # Si no aparecen en el diccionario, no están en el fichero CSV. Descartamos  
-      else:
-         noAparecen += 1
-         noAparecenTotal += 1
-            
+#Ejecución
+if __name__ == "__main__":
+    especie_columna = "Species"
+    nombre_img_columna = "FileName"
+    lista_no_animales = ["human", "NOID", "vehicle", "NA", "", "empty"]
+    nombre_csv = "CSV2.csv"
+    ruta = r"C:\TFG\0_BBDD_COMPLETAS\BBDD_completa\Segundo enlace"
+    ruta_copiar_animales = r"C:\TFG\1_PREPROCESAMIENTO\BBDD_2_PREPROC"
+    lista_imagenes = []
 
-   # Mostramos estadísticas por directorio
-   print("\n")
-   print(os.path.basename(root))
-   print("Número de imagenes encontradas: ", imagenesEncontradas)
-   print("Número de imágenes que no aparecen en el archivo csv ", noAparecen)
-   print("Número de imagenes que contienen animales: ", animals)
-
-   # Reiniciamos variables
-   total = 0
-   animals = 0
-   imagenesEncontradas = 0
-
-# Mostramos estadísticas globales
-print("Número total de imágenes: ", imagenesEncontradasTotal)
-print("Número de imágenes descartadas: ", descarte)
+    diccionario = leer_csv(nombre_csv)
+    procesar_imagenes(diccionario, ruta, ruta_copiar_animales, lista_no_animales)

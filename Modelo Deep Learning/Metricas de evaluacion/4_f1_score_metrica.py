@@ -26,12 +26,9 @@ def obtener_coordenadas_color_contornos(imagen_grises_resaltada):
 
 def mostrar_puntos_de_interes(imagen, coordenadas_x, coordenadas_y, color):
 
-    # Crear una máscara vacía
-    mascara = np.zeros_like(imagen, dtype=np.uint8)
-
-    imagen_con_puntos = imagen.copy()
-    
     # Dibujar los puntos de interés en la máscara
+    mascara = np.zeros_like(imagen, dtype=np.uint8)
+    imagen_con_puntos = imagen.copy()
     for x, y in zip(coordenadas_x, coordenadas_y):
         cv2.circle(mascara, (x, y), 5, color, -1)
     
@@ -43,30 +40,47 @@ def mostrar_puntos_de_interes(imagen, coordenadas_x, coordenadas_y, color):
 
 
 # Inicialización de variables
-carpeta_segmentaciones_modelo = r"C:\Users\Lenovo\Downloads\resultados_segmentacion\version1_modelo"
+carpeta_segmentaciones_modelo = r"C:\Users\Lenovo\Downloads\resultados_segmentacion\version8_modelo"
 carpeta_ground_truth = r"C:\mascaras_test_originales"
 f1_valores = []
 boundary_f1_valores = []
+max_f1_valor = -1.0
+max_f1_nombre_archivo = ""
+min_f1_valor = 1.0
+min_f1_nombre_archivo = ""
 
 # Recorrer las imágenes en las carpetas
 for image_name in os.listdir(carpeta_segmentaciones_modelo):
+    try:
 
-    # F1 Score
-    img_segmentada = cv2.imread(os.path.join(carpeta_segmentaciones_modelo, image_name), cv2.IMREAD_GRAYSCALE)
-    img_groundtruth = cv2.imread(os.path.join(carpeta_ground_truth, image_name), cv2.IMREAD_GRAYSCALE)
-
-
-    mascara = np.where(img_segmentada != 0, 1, 0)
-    mask_ground_truth = np.where(img_groundtruth != 0, 1, 0)
+        # F1 Score
+        img_segmentada = cv2.imread(os.path.join(carpeta_segmentaciones_modelo, image_name), cv2.IMREAD_GRAYSCALE)
+        img_groundtruth = cv2.imread(os.path.join(carpeta_ground_truth, image_name), cv2.IMREAD_GRAYSCALE)
 
 
-    vector_mascara = mascara.flatten()
-    vector_ground_truth = mask_ground_truth.flatten()
+        mascara = np.where(img_segmentada != 0, 1, 0)
+        mask_ground_truth = np.where(img_groundtruth != 0, 1, 0)
 
 
-    f1 = f1_score(vector_ground_truth, vector_mascara)
-    f1_valores.append(f1)
-    print("F1-score:", f1)
+        vector_mascara = mascara.flatten()
+        vector_ground_truth = mask_ground_truth.flatten()
+
+
+        f1 = f1_score(vector_ground_truth, vector_mascara)
+
+        if f1 > max_f1_valor:
+            max_f1_valor = f1
+            max_f1_nombre_archivo = image_name
+        
+        if f1 < min_f1_valor:
+            min_f1_valor = f1
+            min_f1_nombre_archivo = image_name
+
+        f1_valores.append(f1)
+        print("F1-score:", f1)
+    except:
+        print(image_name)
+        continue
 
 
     #Boundary F1 Score
@@ -99,3 +113,24 @@ media_f1 = np.mean(f1_valores)
 media_boundary_f1 = np.mean(boundary_f1_valores)
 print("Media F1-Score: ",media_f1)
 print("Media Boundary F1-Score: ",media_boundary_f1)
+
+print("Minimo valor de F1-Score: ",min_f1_valor," - Imagen: ",min_f1_nombre_archivo)
+print("Maximo valor de F1-Score: ",max_f1_valor," - Imagen: ",max_f1_nombre_archivo)
+
+# Definir colores según los valores de F1-score
+colors = ['red' if score < 0.5 else 'blue' for score in f1_valores]
+
+# Valores para los ejes x e y (en este caso, serán los mismos valores)
+x_values = f1_valores
+y_values = boundary_f1_valores
+
+# Crear la gráfica de puntos
+plt.figure(figsize=(8, 6))
+plt.scatter(x_values, y_values, color=colors, marker='o')
+plt.title('Gráfico de Puntos de F1-score')
+plt.xlabel('F1-score')
+plt.ylabel('Boundary F1-score')
+plt.xlim(0, 1)
+plt.ylim(0, 0.2)
+plt.grid(True)
+plt.show()
