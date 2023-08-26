@@ -10,18 +10,16 @@ Método para obtener los puntos de interés tanto del contorno como del interior
 de los píxeles de cada 10 píxeles.
 '''
 def obtener_coordenadas_color_tolerancia(ruta_imagen, rango_color, tolerancia=10):
-    # Leer la imagen
+    # Cargar imagen
     imagen = cv2.imdecode(np.fromfile(ruta_imagen, dtype=np.uint8), cv2.IMREAD_COLOR | cv2.IMREAD_IGNORE_ORIENTATION)
 
-    # Convertir los rangos de color a arreglos numpy
+    #Obtener máscara
     rango_color = np.array(rango_color, dtype=np.uint8)
-
     imagen_rgb = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
     mascara = cv2.inRange(imagen_rgb, rango_color, rango_color)
 
     # Encontrar los puntos con el color en el rango especificado
     puntos_color = np.argwhere(mascara > 0)
-
     if tolerancia > 0:
         puntos_reducidos = []
         puntos_reducidos.append(puntos_color[0])
@@ -42,13 +40,12 @@ def obtener_coordenadas_color_tolerancia(ruta_imagen, rango_color, tolerancia=10
 
 
 def obtener_coordenadas_color_contornos(imagen_path, color_objetivo):
-    # Leer la imagen
+    
+    # Cargar imagen en escala de grises
     imagen = cv2.imdecode(np.fromfile(imagen_path, dtype=np.uint8), cv2.IMREAD_COLOR | cv2.IMREAD_IGNORE_ORIENTATION)
-
-    # Convertir la imagen a escala de grises resaltando el color objetivo
     imagen_grises_resaltada = convertir_a_escala_de_grises(imagen, color_objetivo)
 
-    # Encontrar los contornos de los objetos resaltados
+    # Utilizar método findContours de CV
     contornos, _ = cv2.findContours(imagen_grises_resaltada, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     # Obtener las coordenadas (x, y) de todos los puntos del contorno
@@ -63,16 +60,13 @@ def obtener_coordenadas_color_contornos(imagen_path, color_objetivo):
     return coordenadas_x, coordenadas_y
 
 def convertir_a_escala_de_grises(imagen, color_objetivo):
-    # Convertir la imagen a formato BGR
+
     imagen_bgr = cv2.cvtColor(imagen, cv2.COLOR_RGB2BGR)
-    
-    # Obtener la máscara del color objetivo
     mascara = cv2.inRange(imagen_bgr, color_objetivo, color_objetivo)
     
     # Aplicar la máscara a la imagen original
     imagen_resultante = cv2.bitwise_and(imagen_bgr, imagen_bgr, mask=mascara)
-    
-    # Convertir la imagen resultante a escala de grises
+
     imagen_gris = cv2.cvtColor(imagen_resultante, cv2.COLOR_BGR2GRAY)
     
     return imagen_gris
@@ -101,22 +95,27 @@ def mostrar_puntos_de_interes(imagen_path, coordenadas_x, coordenadas_y, color):
 
 
 def obtener_json_segmentacion(carpeta_imagenes, carpeta_jsons, color_segmentacion):
+    
     # Lista para almacenar los datos de cada imagen
     datos_imagenes = []
     cont_modif = 1
+
     # Recorrer la carpeta de imágenes y subcarpetas
     for root, dirs, files in os.walk(carpeta_imagenes):
         for filename in files:
-            # Obtener la ruta completa del archivo
+
+
             ruta_imagen = os.path.join(root, filename)
             ruta_json_imagen = os.path.join(carpeta_jsons, filename)
 
             # Verificar la extensión del archivo
             extension = os.path.splitext(filename)[1].lower()
+
             if extension == '.jpg' or extension == '.png' or extension == '.JPG':
+
                 # Obtener coordenadas de color en la imagen
-                coordenadas_x, coordenadas_y = obtener_coordenadas_color_tolerancia(ruta_imagen, color_segmentacion)
-                #coordenadas_x, coordenadas_y = obtener_coordenadas_color_contornos(ruta_imagen, color_segmentacion)
+                #coordenadas_x, coordenadas_y = obtener_coordenadas_color_tolerancia(ruta_imagen, color_segmentacion) #Tolerancia
+                coordenadas_x, coordenadas_y = obtener_coordenadas_color_contornos(ruta_imagen, color_segmentacion) #Contornos
                 mostrar_puntos_de_interes(ruta_imagen,coordenadas_x,coordenadas_y,(255,0,0))
                 
                 # Verificar que se encontraron coordenadas
@@ -187,46 +186,50 @@ def obtener_json_segmentacion(carpeta_imagenes, carpeta_jsons, color_segmentacio
     return datos_imagenes
     
 
-# Carpeta que contiene las imágenes y subcarpetas
-carpeta_imagenes = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Masks\train"
-carpeta_jsons = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Images\train"
 
-# Rangos de color para buscar en las imágenes
-color_segmentacion = (37, 177, 90)
+if __name__ == "__main__":
 
-# Especificar la ruta y el nombre de archivo donde se guardará el JSON
-archivo_json = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Images\train\puntos_de_interes.json"
+    # Carpeta que contiene las imágenes y subcarpetas
+    carpeta_imagenes = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Masks\train"
+    carpeta_jsons = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Images\train"
 
-# Obtener los datos de segmentación en formato JSON para todas las imágenes en la carpeta
-datos_imagenes = obtener_json_segmentacion(carpeta_imagenes, carpeta_jsons, color_segmentacion)
+    # Rangos de color para buscar en las imágenes
+    color_segmentacion = (37, 177, 90)
 
-# Guardar los datos de las imágenes en el archivo JSON
-with open(archivo_json, "w") as archivo:
-    json.dump(datos_imagenes, archivo, ensure_ascii=False)
+    # Especificar la ruta y el nombre de archivo donde se guardará el JSON
+    archivo_json = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Images\train\puntos_de_interes.json"
 
-# FIXEAMOS el JSON CREADO de forma que quede como el ejemplo para poder ser usado en MASK-RCNN
-import json
+    # Obtener los datos de segmentación en formato JSON para todas las imágenes en la carpeta
+    datos_imagenes = obtener_json_segmentacion(carpeta_imagenes, carpeta_jsons, color_segmentacion)
 
-# Especificar la ruta y el nombre de archivo donde se guardará el JSON
-archivo_json = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Images\train\puntos_de_interes.json"
+    # Guardar los datos de las imágenes en el archivo JSON
+    with open(archivo_json, "w") as archivo:
+        json.dump(datos_imagenes, archivo, ensure_ascii=False)
 
-print("PRIMER ARCHIVO COMPLETADO: ", str(archivo_json))
 
-# Abrir el archivo JSON en modo lectura
-with open(archivo_json, "r") as archivo:
-    # Leer el contenido del archivo y almacenarlo en una variable
-    contenido_json = archivo.read()
 
-# Realizar las modificaciones necesarias en la cadena de texto
-contenido_modificado = contenido_json.replace("}, {", ",")
-contenido_modificado = contenido_modificado.replace("ñ", "n").replace("Ñ","N")
-contenido_modificado = contenido_modificado.replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u")
-contenido_modificado = contenido_modificado[1:-1]  # IMPORTANTE: PARA MANTENER LA MISMA ESTRUCTURA, HAY QUE ELIMINAR EL PRIMER Y ÚLTIMO CARACTER DEL ARCHIVO FIXEADO.
+    # FIXEAMOS el JSON CREADO de forma que quede como el ejemplo para poder ser usado en MASK-RCNN
 
-# Guardar la cadena de texto modificada en un nuevo archivo
-nuevo_archivo_json = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Images\train\puntos_de_interes_nuevo.json"
+    # Especificar la ruta y el nombre de archivo donde se guardará el JSON
+    archivo_json = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Images\train\puntos_de_interes.json"
 
-with open(nuevo_archivo_json, "w") as archivo:
-    archivo.write(contenido_modificado)
+    print("PRIMER ARCHIVO COMPLETADO: ", str(archivo_json))
 
-print("SEGUNDO ARCHIVO COMPLETADO: ", str(nuevo_archivo_json))
+    # Abrir el archivo JSON en modo lectura
+    with open(archivo_json, "r") as archivo:
+        # Leer el contenido del archivo y almacenarlo en una variable
+        contenido_json = archivo.read()
+
+    # Realizar las modificaciones necesarias en la cadena de texto
+    contenido_modificado = contenido_json.replace("}, {", ",")
+    contenido_modificado = contenido_modificado.replace("ñ", "n").replace("Ñ","N")
+    contenido_modificado = contenido_modificado.replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u")
+    contenido_modificado = contenido_modificado[1:-1]  # IMPORTANTE: PARA MANTENER LA MISMA ESTRUCTURA, HAY QUE ELIMINAR EL PRIMER Y ÚLTIMO CARACTER DEL ARCHIVO FIXEADO.
+
+    # Guardar la cadena de texto modificada en un nuevo archivo
+    nuevo_archivo_json = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Images\train\puntos_de_interes_nuevo.json"
+
+    with open(nuevo_archivo_json, "w") as archivo:
+        archivo.write(contenido_modificado)
+
+    print("SEGUNDO ARCHIVO COMPLETADO: ", str(nuevo_archivo_json))

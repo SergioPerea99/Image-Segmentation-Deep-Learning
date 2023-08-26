@@ -20,9 +20,6 @@ def convertir_dataset_a_COCO(ann_file, out_file, image_prefix):
             height=height,
             width=width))
 
-        bboxes = []
-        labels = []
-        masks = []
         for _, obj in v['regions'].items():
             assert not obj['region_attributes']
             obj = obj['shape_attributes']
@@ -55,19 +52,22 @@ def convertir_dataset_a_COCO(ann_file, out_file, image_prefix):
 
 
 
-annotation_1 = convertir_dataset_a_COCO(
-    'Dataset_pruebas/Images/train/puntos_de_interes_nuevo.json',
-    'Dataset_pruebas/Images/train/annotation_coco.json',
-    'Dataset_pruebas/Images/train')
+
+if __name__ == "__main__":
+
+    annotation_1 = convertir_dataset_a_COCO(
+        r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Images\train\puntos_de_interes_nuevo.json",
+        r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Images\train\annotation_coco.json",
+        r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Images\train")
 
 
-annotation_2 = convertir_dataset_a_COCO(
-    'Dataset_pruebas/Images/val/puntos_de_interes_nuevo.json',
-    'Dataset_pruebas/Images/val/annotation_coco.json',
-    'Dataset_pruebas/Images/val')
+    annotation_2 = convertir_dataset_a_COCO(
+        r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Images\val\puntos_de_interes_nuevo.json",
+        r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Images\val\annotation_coco.json",
+        r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Images\val")
 
 
-annotation_3 = convertir_dataset_a_COCO(
-    'Dataset_pruebas/Images/test/puntos_de_interes_nuevo.json',
-    'Dataset_pruebas/Images/test/annotation_coco.json',
-    'Dataset_pruebas/Images/test')
+    annotation_3 = convertir_dataset_a_COCO(
+        r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Images\test\puntos_de_interes_nuevo.json",
+        r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Images\test\annotation_coco.json",
+        r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Images\test")
