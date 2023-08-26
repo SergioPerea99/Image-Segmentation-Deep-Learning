@@ -3,6 +3,7 @@ import random
 import shutil
 
 def dividir_imagenes(carpeta_origen, carpeta_destino):
+
     # Crear carpetas de entrenamiento, validación y prueba
     carpeta_entrenamiento = os.path.join(carpeta_destino, "train")
     carpeta_validacion = os.path.join(carpeta_destino, "val")
@@ -61,7 +62,7 @@ def copiar_imagenes(carpeta_fuente, carpeta_destino_entrenamiento, carpeta_desti
             elif nombre_archivo in archivos_prueba:
                 ruta_destino = os.path.join(carpeta_destino_prueba, archivo)
             else:
-                #print(f"No se encontró la imagen {archivo} en las carpetas entrenamiento, validacion o prueba.")
+                print(f"No se encontró la imagen {archivo} en las carpetas entrenamiento, validacion o prueba.")
                 continue
 
             shutil.copy2(ruta_imagen, ruta_destino)
@@ -69,19 +70,19 @@ def copiar_imagenes(carpeta_fuente, carpeta_destino_entrenamiento, carpeta_desti
 
 
 
-# Ruta de la carpeta que contiene las imágenes originales
-carpeta_origen = r"C:\TFG\0_BBDD_ETIQUETADAS\TODAS_cuidado_hay_duplicados"
-# Ruta de la carpeta donde se guardarán las imágenes divididas
-carpeta_destino = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Masks"
+if __name__ == "__main__":
+    
 
-# Llamar a la función para dividir las imágenes
-dividir_imagenes(carpeta_origen, carpeta_destino)
+    carpeta_origen = r"C:\TFG\0_BBDD_ETIQUETADAS\TODAS_cuidado_hay_duplicados"
+    carpeta_destino = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Masks"
+
+    # Dividir las imágenes
+    dividir_imagenes(carpeta_origen, carpeta_destino)
 
 
-# Rutas de las carpetas de destino según la carpeta en la que se encuentre la imagen
-carpeta_destino_entrenamiento = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Masks\train"
-carpeta_destino_validacion = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Masks\val"
-carpeta_destino_prueba = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Masks\test"
+    carpeta_destino_entrenamiento = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Masks\train"
+    carpeta_destino_validacion = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Masks\val"
+    carpeta_destino_prueba = r"C:\TFG\0_BBDD_ETIQUETADAS\Dataset_pruebas\Masks\test"
 
-# Llamar a la función para buscar y copiar las imágenes
-copiar_imagenes(carpeta_origen, carpeta_destino_entrenamiento, carpeta_destino_validacion, carpeta_destino_prueba)
+    # Buscar y copiar las imágenes
+    copiar_imagenes(carpeta_origen, carpeta_destino_entrenamiento, carpeta_destino_validacion, carpeta_destino_prueba)
