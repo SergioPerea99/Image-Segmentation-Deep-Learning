@@ -15,7 +15,7 @@ def preparar_imagenes_originales(ruta_imagen, rango_rgb_inicio=[32, 170, 85],ran
     # Crea una máscara basada en el rango de valores RGB
     mascara = np.all((imagen_np >= rango_rgb_inicio) & (imagen_np <= rango_rgb_fin), axis=-1)
 
-    # Crea una imagen con los valores de RGB (37, 177, 90)
+    # Crea una imagen con los valores de RGB
     imagen_resultante = np.zeros_like(imagen_np) 
     imagen_resultante[mascara] = rgb_convertido
 
@@ -24,15 +24,18 @@ def preparar_imagenes_originales(ruta_imagen, rango_rgb_inicio=[32, 170, 85],ran
 
     return imagen_resultante_pil
 
-carpeta_imagenes = r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Masks\test"
-carpeta_destino = r"C:\mascaras_test_originales"
-os.makedirs(carpeta_destino, exist_ok=True)
 
-for imagen in os.listdir(carpeta_imagenes):
-    ruta_imagen_original = os.path.join(carpeta_imagenes, imagen)
-    imagen_final = preparar_imagenes_originales(ruta_imagen_original)
 
-    # Guardar la imagen resultante en la carpeta de resultados
-    ruta_imagen_resultante = os.path.join(carpeta_destino, imagen)
+if __name__ == "__main__":
+    carpeta_imagenes = r"C:\Users\Lenovo\Downloads\Dataset_pruebas\Masks\test"
+    carpeta_destino = r"C:\mascaras_test_originales"
+    os.makedirs(carpeta_destino, exist_ok=True)
 
-    imagen_final.save(ruta_imagen_resultante)
+    for imagen in os.listdir(carpeta_imagenes):
+        ruta_imagen_original = os.path.join(carpeta_imagenes, imagen)
+        imagen_final = preparar_imagenes_originales(ruta_imagen_original)
+
+        # Guardar la imagen resultante en la carpeta de resultados
+        ruta_imagen_resultante = os.path.join(carpeta_destino, imagen)
+
+        imagen_final.save(ruta_imagen_resultante)
