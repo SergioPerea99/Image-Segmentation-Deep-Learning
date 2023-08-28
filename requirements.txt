@@ -1,0 +1,10 @@
+opencv-python-headless
+Pillow
+numpy
+matplotlib
+mmcv
+mmengine
+torch
+mmdet
+scikit-image
+scikit-learn
