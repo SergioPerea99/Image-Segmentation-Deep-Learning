@@ -25,10 +25,8 @@ pip install -r requirements.txt
 
 ## Documentación 
 
-Para tener una visión completa del estudio realizado, se recomienda leer en profundidad el archivo [Segmentación de  
-imágenes de foto-trampeo  
-mediante técnicas de  
-aprendizaje profundo](https://github.com/SergioPerea99/Image-Segmentation-Deep-Learning/tree/main). 
+Para tener una visión completa del estudio realizado, se recomienda leer en profundidad el archivo [**Segmentación de  
+imágenes de foto-trampeo mediante técnicas de aprendizaje profundo**](https://github.com/SergioPerea99/Image-Segmentation-Deep-Learning/tree/main). 
 
 En el documento, podrás encontrar toda la investigación desarrollada hasta obtener los resultados de las segmentaciones de los animales de las imágenes de foto-trampeo.
 
