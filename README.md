@@ -16,7 +16,7 @@ El propósito del proyecto será realizar un estudio con métodos de segmentaci�
 
   
 
-# Requisitos
+## Requisitos
 
 Para poner en marcha nuestro proyecto, es necesario instalar las librerías contenidas en el archivo `requirements.txt`:
 
@@ -31,14 +31,14 @@ Para tener una visión completa del estudio realizado, se recomienda leer en pro
 En el documento, podrás encontrar toda la investigación desarrollada hasta obtener los resultados de las segmentaciones de los animales de las imágenes de foto-trampeo.
 
 
-# Modelos entrenados
+## Modelos entrenados
 
 Para poder descargar los modelos entrenados será necesario entrar en el siguiente enlace de Drive:
 
 [**Descargar modelos entrenados**](https://drive.google.com/drive/folders/1QwD8BrAPq-pjK7NfrXM6hk2_Eu1__15Y?usp=sharing)
 
 
-# Dataset
+## Dataset
 
 Para poder descargar el conjunto de datos con el que se ha trabajado será necesario entrar en el siguiente enlace de Drive:
 
