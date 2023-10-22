@@ -1,48 +1,38 @@
-# Segmentación de imágenes de foto-trampeo con modelos Deep Learning
+# Wildlife Image Segmentation with Deep Learning Models
 
-Trabajo de fin de grado orientado al uso de técnicas de aprendizaje profundo en imágenes de foto-trampeo para la tarea de segmentación de imágenes de animales en escenarios con gran similitud al objeto a ser segmentado.
+## Introduction
 
-  
-
-## Introducción
+This Bachelor's thesis focuses on the utilization of deep learning techniques in wildlife camera trap images for the task of animal image segmentation in scenarios with a high similarity to the object to be segmented
 
   
 
-La segmentación de animales en una imagen foto-trampeo tiene unos beneficios y aplicaciones prácticas como la mejora de precisión del análisis de imágenes, la facilitación de identificación de especies y la mejora en el seguimiento de especies.
+## Requirements
 
-  
-
-El propósito del proyecto será realizar un estudio con métodos de segmentación de imágenes mediante técnicas de aprendizaje profundo y analizar sus resultados con otros procedimientos basados en la segmentación.
-
-  
-
-## Requisitos
-
-Para poner en marcha nuestro proyecto, es necesario instalar las librerías contenidas en el archivo `requirements.txt`:
+To set up our project, you'll need to install the libraries from the `requirements.txt` file:
 
 ```
 pip install -r requirements.txt
 ```
 
-## Documentación 
+## Documentation 
 
-Para tener una visión completa del estudio realizado, se recomienda leer en profundidad el archivo [**Segmentación de imágenes de foto-trampeo mediante técnicas de aprendizaje profundo**](https://github.com/SergioPerea99/Image-Segmentation-Deep-Learning/blob/main/Sergio_Perea_2022_2023_compressed.pdf). 
+For a comprehensive understanding of the study, it's highly recommended to delve into the document [**Segmentación de imágenes de foto-trampeo mediante técnicas de aprendizaje profundo**](https://github.com/SergioPerea99/Image-Segmentation-Deep-Learning/blob/main/Sergio_Perea_2022_2023_compressed.pdf). 
 
-En el documento, podrás encontrar toda la investigación desarrollada hasta obtener los resultados de las segmentaciones de los animales de las imágenes de foto-trampeo.
+Within this document, you'll find an in-depth investigation leading to the results of animal image segmentations.
 
 
-## Modelos entrenados
+## Trained Models
 
-Para poder descargar los modelos entrenados será necesario entrar en el siguiente enlace de Drive:
+To access the trained models, please follow the link to the Drive:
 
-[**Descargar modelos entrenados**](https://drive.google.com/drive/folders/1QwD8BrAPq-pjK7NfrXM6hk2_Eu1__15Y?usp=sharing)
+[**Download trained models**](https://drive.google.com/drive/folders/1QwD8BrAPq-pjK7NfrXM6hk2_Eu1__15Y?usp=sharing)
 
 
 ## Dataset
 
-Para poder descargar el conjunto de datos con el que se ha trabajado será necesario entrar en el siguiente enlace de Drive:
+To download the dataset we worked with, please follow the link to the Drive:
 
-[**Descargar dataset**](https://drive.google.com/drive/folders/11m_qUyBAZehIxm36Qsu7A6JNBGDE7A3h?usp=sharing)
+[**Download dataset**](https://drive.google.com/drive/folders/11m_qUyBAZehIxm36Qsu7A6JNBGDE7A3h?usp=sharing)
 
 
 
